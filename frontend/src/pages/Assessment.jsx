@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
 import * as tf from '@tensorflow/tfjs'
 import * as cocoSsd from '@tensorflow-models/coco-ssd'
+import { API_BASE_URL } from '../config'
 
 const SKILL_NAMES = {
     1: 'Python',
@@ -311,7 +312,7 @@ export default function Assessment() {
     const generateQuestions = async () => {
         setLoading(true)
         try {
-            const res = await axios.post('http://127.0.0.1:8000/api/llm/generate-questions', {
+            const res = await axios.post(`${API_BASE_URL}/llm/generate-questions`, {
                 skill_name: skillName,
                 num_questions: Number(questionCount),
                 difficulty: difficulty
@@ -371,7 +372,7 @@ export default function Assessment() {
 
         // Persist to backend database with AI proctoring telemetry
         try {
-            await axios.post('http://127.0.0.1:8000/api/assessment/save', {
+            await axios.post(`${API_BASE_URL}/assessment/save`, {
                 skill_id: Number(skillId),
                 score: percentage,
                 questions_answered: answeredQuestions,

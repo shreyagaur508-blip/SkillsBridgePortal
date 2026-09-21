@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { API_BASE_URL } from '../../config'
 
 export default function IndustryDashboard({ user }) {
     const [jobs, setJobs] = useState([])
@@ -25,11 +26,11 @@ export default function IndustryDashboard({ user }) {
         try {
             setLoading(true)
             // 1. Fetch real verified candidates queried directly from backend User & AssessmentResult tables
-            const candRes = await axios.get('http://127.0.0.1:8000/api/industry/candidates')
+            const candRes = await axios.get(`${API_BASE_URL}/industry/candidates`)
             setCandidates(candRes.data?.candidates || [])
 
             // 2. Fetch real active jobs from DB
-            const jobsRes = await axios.get('http://127.0.0.1:8000/api/internships')
+            const jobsRes = await axios.get(`${API_BASE_URL}/internships`)
             const jobsData = jobsRes.data?.internships || jobsRes.data || []
             setJobs(Array.isArray(jobsData) ? jobsData : [])
         } catch (err) {
@@ -44,7 +45,7 @@ export default function IndustryDashboard({ user }) {
         setPosting(true)
         try {
             const skillsArray = newJob.required_skills.split(',').map(s => s.trim()).filter(Boolean)
-            await axios.post('http://127.0.0.1:8000/api/internships', {
+            await axios.post(`${API_BASE_URL}/internships`, {
                 title: newJob.title,
                 company_name: newJob.company_name || user?.company || 'Industry Partner',
                 description: newJob.description,

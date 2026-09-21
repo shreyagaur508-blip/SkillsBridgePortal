@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config'
 
 export default function Jobs() {
     const { user } = useAuth()
@@ -26,7 +27,7 @@ export default function Jobs() {
         setLoading(true)
         try {
             const handleToUse = ghHandle || customGithubInput || user?.github_url || 'developer'
-            const res = await axios.post('http://127.0.0.1:8000/api/jobs/github-match', {
+            const res = await axios.post(`${API_BASE_URL}/jobs/github-match`, {
                 username: handleToUse,
                 user_id: user?.id
             })
@@ -39,7 +40,7 @@ export default function Jobs() {
             console.error('Error fetching matched jobs with GitHub:', err)
             // Fallback to standard jobs endpoint
             try {
-                const fallbackRes = await axios.get('http://127.0.0.1:8000/api/internships')
+                const fallbackRes = await axios.get(`${API_BASE_URL}/internships`)
                 const fallbackJobs = (fallbackRes.data?.internships || []).map(j => ({
                     ...j,
                     match_score: 75,
@@ -69,7 +70,7 @@ export default function Jobs() {
     const fetchFreshRemoteJobs = async () => {
         setLoading(true)
         try {
-            await axios.get('http://127.0.0.1:8000/api/jobs/fetch/remotive')
+            await axios.get(`${API_BASE_URL}/jobs/fetch/remotive`)
             await fetchMatchedJobs(customGithubInput)
             alert('✅ Live industry jobs fetched from Remotive API and matched with your profile!')
         } catch (err) {

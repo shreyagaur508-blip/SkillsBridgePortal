@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config'
 
 export default function LearningPath() {
     const { user } = useAuth()
@@ -20,7 +21,7 @@ export default function LearningPath() {
         try {
             setLoading(true)
             // 1. Fetch available career roles
-            const rolesRes = await axios.get('http://127.0.0.1:8000/api/learning-paths/roles')
+            const rolesRes = await axios.get(`${API_BASE_URL}/learning-paths/roles`)
             const availableRoles = rolesRes.data?.roles || []
             setRoles(availableRoles)
 
@@ -28,7 +29,7 @@ export default function LearningPath() {
             let activeRole = 'full-stack'
             if (user?.id) {
                 try {
-                    const progRes = await axios.get(`http://127.0.0.1:8000/api/learning-paths/progress/${user.id}`)
+                    const progRes = await axios.get(`${API_BASE_URL}/learning-paths/progress/${user.id}`)
                     if (progRes.data?.target_role) {
                         activeRole = progRes.data.target_role
                     }
@@ -50,14 +51,14 @@ export default function LearningPath() {
         try {
             setLoading(true)
             // Call skill gap analyzer endpoint
-            const analyzeRes = await axios.post('http://127.0.0.1:8000/api/learning-paths/analyze', {
+            const analyzeRes = await axios.post(`${API_BASE_URL}/learning-paths/analyze`, {
                 user_id: user.id,
                 role_id: roleId
             })
             setGapAnalysis(analyzeRes.data)
 
             // Call roadmap generator endpoint
-            const roadmapRes = await axios.post('http://127.0.0.1:8000/api/learning-paths/generate', {
+            const roadmapRes = await axios.post(`${API_BASE_URL}/learning-paths/generate`, {
                 user_id: user.id,
                 role_id: roleId
             })
@@ -79,7 +80,7 @@ export default function LearningPath() {
         setSavingMilestone(milestoneId)
         const newStatus = !currentStatus
         try {
-            await axios.post('http://127.0.0.1:8000/api/learning-paths/progress', {
+            await axios.post(`${API_BASE_URL}/learning-paths/progress`, {
                 user_id: user.id,
                 target_role: selectedRole,
                 milestone_id: milestoneId,

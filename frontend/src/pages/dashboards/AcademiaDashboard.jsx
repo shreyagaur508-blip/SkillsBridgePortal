@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { API_BASE_URL } from '../../config'
 
 export default function AcademiaDashboard({ user }) {
     const [analytics, setAnalytics] = useState(null)
@@ -12,7 +13,7 @@ export default function AcademiaDashboard({ user }) {
     const fetchAcademiaAnalytics = async () => {
         try {
             setLoading(true)
-            const res = await axios.get('http://127.0.0.1:8000/api/academia/analytics')
+            const res = await axios.get(`${API_BASE_URL}/academia/analytics`)
             setAnalytics(res.data)
         } catch (err) {
             console.error('Error fetching academia analytics from DB:', err)

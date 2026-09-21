@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config'
 
 export default function Skills() {
     const { user } = useAuth()
@@ -20,13 +21,13 @@ export default function Skills() {
         try {
             setLoading(true)
             // 1. Fetch platform skills catalog
-            const res = await axios.get('http://127.0.0.1:8000/api/skills')
+            const res = await axios.get(`${API_BASE_URL}/skills`)
             setSkills(res.data?.skills || [])
 
             // 2. If student, fetch student's verified scores
             if (user?.id) {
                 try {
-                    const resultsRes = await axios.get(`http://127.0.0.1:8000/api/assessment/results/${user.id}`)
+                    const resultsRes = await axios.get(`${API_BASE_URL}/assessment/results/${user.id}`)
                     const results = resultsRes.data?.results || []
                     const scoresMap = {}
                     results.forEach(r => {

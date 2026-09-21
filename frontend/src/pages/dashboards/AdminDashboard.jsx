@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { API_BASE_URL } from '../../config'
 
 export default function AdminDashboard({ user }) {
     const [stats, setStats] = useState(null)
@@ -12,7 +13,7 @@ export default function AdminDashboard({ user }) {
     const fetchAdminStats = async () => {
         try {
             setLoading(true)
-            const res = await axios.get('http://127.0.0.1:8000/api/admin/stats')
+            const res = await axios.get(`${API_BASE_URL}/admin/stats`)
             setStats(res.data)
         } catch (err) {
             console.error('Error fetching admin stats from DB:', err)
@@ -124,7 +125,7 @@ export default function AdminDashboard({ user }) {
                             style={{ justifyContent: 'flex-start' }}
                             onClick={async () => {
                                 try {
-                                    const r = await axios.post('http://127.0.0.1:8000/api/skills/seed-catalog')
+                                    const r = await axios.post(`${API_BASE_URL}/skills/seed-catalog`)
                                     alert(`Catalog Seeded: ${r.data.message} (${r.data.added} added, ${r.data.skipped_existing} existing)`)
                                     fetchAdminStats()
                                 } catch (e) {

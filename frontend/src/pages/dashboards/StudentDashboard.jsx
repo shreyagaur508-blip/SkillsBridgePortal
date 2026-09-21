@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { API_BASE_URL } from '../../config'
 
 export default function StudentDashboard({ user }) {
     const [jobs, setJobs] = useState([])
@@ -17,7 +18,7 @@ export default function StudentDashboard({ user }) {
             // 1. Fetch real assessment results for this student from backend API
             if (user?.id) {
                 try {
-                    const skillRes = await axios.get(`http://127.0.0.1:8000/api/assessment/results/${user.id}`)
+                    const skillRes = await axios.get(`${API_BASE_URL}/assessment/results/${user.id}`)
                     const results = skillRes.data?.results || []
                     setUserSkills(results)
                 } catch (err) {
@@ -27,7 +28,7 @@ export default function StudentDashboard({ user }) {
             }
 
             // 2. Fetch live internships from database
-            const jobsRes = await axios.get('http://127.0.0.1:8000/api/internships')
+            const jobsRes = await axios.get(`${API_BASE_URL}/internships`)
             const jobsData = jobsRes.data?.internships || jobsRes.data || []
             setJobs(Array.isArray(jobsData) ? jobsData : [])
         } catch (err) {
